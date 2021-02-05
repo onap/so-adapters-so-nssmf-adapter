@@ -1,0 +1,10 @@
+{
+  "AN": {
+    "latency": 5,
+    "maxNumberofUEs": "100"
+  },
+  "CN": {
+    "latency": 5,
+    "maxNumberofConns": "100"
+  }
+}
