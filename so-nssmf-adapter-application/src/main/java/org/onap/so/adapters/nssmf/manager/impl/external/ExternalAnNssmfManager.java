@@ -118,8 +118,25 @@ public class ExternalAnNssmfManager extends ExternalNssmfManager {
 
     @Override
     public RestResponse modifyNssi(NssmfAdapterNBIRequest modifyRequest) throws ApplicationException {
-        // TODO
-        return null;
+
+        NssiResponse resp = new NssiResponse();
+        String nssiId = modifyRequest.getActDeActNssi().getNssiId();
+        resp.setJobId(UUID.randomUUID().toString());
+        resp.setNssiId(nssiId);
+
+        RestResponse returnRsp = new RestResponse();
+
+        returnRsp.setStatus(202);
+        returnRsp.setResponseContent(marshal(resp));
+
+        ResourceOperationStatus status =
+                new ResourceOperationStatus(serviceInfo.getNsiId(), resp.getJobId(), serviceInfo.getServiceUuid());
+        status.setResourceInstanceID(nssiId);
+        status.setOperType(actionType.toString());
+
+        updateDbStatus(status, returnRsp.getStatus(), JobStatus.FINISHED, NssmfAdapterUtil.getStatusDesc(actionType));
+        return returnRsp;
+
     }
 
     @Override
