@@ -28,4 +28,5 @@ VOLUME /app/config
 VOLUME /app/ca-certificates
 
 WORKDIR /app
+RUN ["chmod", "+x", "/app/start-app.sh"]
 ENTRYPOINT ["/app/start-app.sh"]
