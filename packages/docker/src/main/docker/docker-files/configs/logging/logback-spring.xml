@@ -173,15 +173,11 @@
     <logger name="org.springframework" level="WARN" />
     <logger name="org.springframework.security.authentication.dao.DaoAuthenticationProvider" level="DEBUG" />
 
-    <!-- Camunda related loggers -->
-    <logger name="org.camunda.bpm.engine.jobexecutor.level" level="WARN" />
-    <logger name="org.camunda.bpm.engine.impl.persistence.entity.JobEntity.level" level="WARN" />
-
     <logger name="org.apache.wire" level="DEBUG" />
     <logger name="org.onap" level="DEBUG" />
-    <logger name="com.att.ecomp" level="DEBUG" />
+    
     <logger name="org.apache.cxf.interceptor" level="DEBUG" />
-    <logger name="com.att.commons" level="DEBUG" />
+    
     <logger name="org.reflections" level="ERROR" />
 
     <logger name="AUDIT" level="INFO" additivity="false">
