@@ -120,7 +120,7 @@ public class ExternalAnNssmfManager extends ExternalNssmfManager {
     public RestResponse modifyNssi(NssmfAdapterNBIRequest modifyRequest) throws ApplicationException {
 
         NssiResponse resp = new NssiResponse();
-        String nssiId = modifyRequest.getActDeActNssi().getNssiId();
+        String nssiId = modifyRequest.getAllocateAnNssi().getNssiId();
         resp.setJobId(UUID.randomUUID().toString());
         resp.setNssiId(nssiId);
 

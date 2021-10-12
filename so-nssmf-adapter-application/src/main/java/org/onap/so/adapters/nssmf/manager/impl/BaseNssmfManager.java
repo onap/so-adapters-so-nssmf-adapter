@@ -87,6 +87,11 @@ public abstract class BaseNssmfManager implements NssmfManager {
     @Override
     public RestResponse modifyNssi(NssmfAdapterNBIRequest modifyRequest) throws ApplicationException {
         this.params.clear();
+	if(this.esrInfo.getNetworkType().equals(NetworkType.CORE))
+        {
+        //this.params.put("sliceProfileId", modifyRequest.getAllocateCnNssi().getSliceProfile().getSliceProfileId());
+	this.params.put("nssiId", modifyRequest.getAllocateCnNssi().getNssiId());
+        }
         this.urlHandler();
         String requestBody = wrapModifyReqBody(modifyRequest);
 

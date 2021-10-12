@@ -95,6 +95,7 @@ public abstract class ExternalNssmfManager extends BaseNssmfManager {
                 nssiInstance.setModelVersionId(serviceInfo.getServiceUuid());
                 nssiInstance.setServiceInstanceLocationId(serviceInfo.getPLMNIdList());
                 nssiInstance.setEnvironmentContext(esrInfo.getNetworkType().getNetworkType());
+                nssiInstance.setWorkloadContext(esrInfo.getNetworkType().getNetworkType().toUpperCase()); //Subnet Type
                 nssiInstance.setServiceRole("nssi");
 
                 restUtil.createServiceInstance(nssiInstance, serviceInfo);
@@ -120,7 +121,6 @@ public abstract class ExternalNssmfManager extends BaseNssmfManager {
         JobStatusResponse jobStatusResponse = unMarshal(restResponse.getResponseContent(), JobStatusResponse.class);
 
         ResponseDescriptor rspDesc = jobStatusResponse.getResponseDescriptor();
-
         logger.info("status = {}", status);
         rspDesc.setNssiId(status.getResourceInstanceID());
 
@@ -232,7 +232,7 @@ public abstract class ExternalNssmfManager extends BaseNssmfManager {
         NssiResponse response = unMarshal(restResponse.getResponseContent(), NssiResponse.class);
         ResourceOperationStatus status =
                 new ResourceOperationStatus(serviceInfo.getNsiId(), response.getJobId(), serviceInfo.getServiceUuid());
-        status.setResourceInstanceID(response.getNssiId());
+        status.setResourceInstanceID(serviceInfo.getNssiId());
         status.setOperType(actionType.toString());
         status.setProgress("0");
 
