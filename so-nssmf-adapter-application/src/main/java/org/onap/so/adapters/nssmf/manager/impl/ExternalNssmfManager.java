@@ -96,6 +96,7 @@ public abstract class ExternalNssmfManager extends BaseNssmfManager {
                 nssiInstance.setServiceInstanceLocationId(serviceInfo.getPLMNIdList());
                 nssiInstance.setEnvironmentContext(esrInfo.getNetworkType().getNetworkType());
                 nssiInstance.setWorkloadContext(esrInfo.getNetworkType().getNetworkType().toUpperCase()); //Subnet Type
+	   	nssiInstance.setServiceFunction(serviceInfo.getResourceSharingLevel());
                 nssiInstance.setServiceRole("nssi");
 
                 restUtil.createServiceInstance(nssiInstance, serviceInfo);
