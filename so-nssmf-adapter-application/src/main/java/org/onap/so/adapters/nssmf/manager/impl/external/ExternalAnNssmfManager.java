@@ -183,6 +183,6 @@ public class ExternalAnNssmfManager extends ExternalNssmfManager {
 
     @Override
     protected SelectionType doQueryNSSISelectionCapability() {
-        return SelectionType.NSSMF;
+        return SelectionType.NSMF;
     }
 }
