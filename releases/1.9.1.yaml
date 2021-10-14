@@ -1,6 +1,6 @@
 ---
 distribution_type: 'container'
-container_release_tag: '1.9.0'
+container_release_tag: '1.9.1'
 project: 'so'
 log_dir: 'so-adapters-so-nssmf-adapter-maven-docker-stage-master/248/'
 ref: '711ca0e978e921d4753f5700378cef4f52d4a178'
