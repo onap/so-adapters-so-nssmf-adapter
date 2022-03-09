@@ -3,6 +3,7 @@
  * ONAP - SO
  * ================================================================================
  # Copyright (c) 2020, CMCC Technologies Co., Ltd.
+ # Contribution (c) 2022, Aarna Networks, Inc.
  #
  # Licensed under the Apache License, Version 2.0 (the "License")
  # you may not use this file except in compliance with the License.
@@ -139,6 +140,7 @@ public class ExternalAnNssmfManager extends ExternalNssmfManager {
 
     }
 
+    /* This method will not be required as BaseNssmfManager.java will provide the activateNssi()
     @Override
     public RestResponse activateNssi(NssmfAdapterNBIRequest nbiRequest, String snssai) throws ApplicationException {
         NssiResponse resp = new NssiResponse();
@@ -158,7 +160,7 @@ public class ExternalAnNssmfManager extends ExternalNssmfManager {
 
         updateDbStatus(status, returnRsp.getStatus(), JobStatus.FINISHED, NssmfAdapterUtil.getStatusDesc(actionType));
         return returnRsp;
-    }
+    } */
 
     @Override
     protected RestResponse doQueryJobStatus(ResourceOperationStatus status) throws ApplicationException {
