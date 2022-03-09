@@ -3,6 +3,7 @@
  * ONAP - SO
  * ================================================================================
  # Copyright (c) 2020, CMCC Technologies Co., Ltd.
+ # Contribution (c) 2022, Aarna Networks, Inc.
  #
  # Licensed under the Apache License, Version 2.0 (the "License")
  # you may not use this file except in compliance with the License.
@@ -137,27 +138,6 @@ public class ExternalAnNssmfManager extends ExternalNssmfManager {
         updateDbStatus(status, returnRsp.getStatus(), JobStatus.FINISHED, NssmfAdapterUtil.getStatusDesc(actionType));
         return returnRsp;
 
-    }
-
-    @Override
-    public RestResponse activateNssi(NssmfAdapterNBIRequest nbiRequest, String snssai) throws ApplicationException {
-        NssiResponse resp = new NssiResponse();
-        String nssiId = nbiRequest.getActDeActNssi().getNssiId();
-        resp.setJobId(UUID.randomUUID().toString());
-        resp.setNssiId(nssiId);
-
-        RestResponse returnRsp = new RestResponse();
-
-        returnRsp.setStatus(202);
-        returnRsp.setResponseContent(marshal(resp));
-
-        ResourceOperationStatus status =
-                new ResourceOperationStatus(serviceInfo.getNsiId(), resp.getJobId(), serviceInfo.getServiceUuid());
-        status.setResourceInstanceID(nssiId);
-        status.setOperType(actionType.toString());
-
-        updateDbStatus(status, returnRsp.getStatus(), JobStatus.FINISHED, NssmfAdapterUtil.getStatusDesc(actionType));
-        return returnRsp;
     }
 
     @Override
