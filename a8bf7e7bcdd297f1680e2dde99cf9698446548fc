@@ -22,6 +22,30 @@
       "revId": "a8bf7e7bcdd297f1680e2dde99cf9698446548fc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b51cc71_6f1f31ee",
+        "filename": "so-nssmf-adapter-application/src/main/java/org/onap/so/adapters/nssmf/manager/impl/external/ExternalAnNssmfManager.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 7831
+      },
+      "writtenOn": "2022-03-11T15:24:46Z",
+      "side": 1,
+      "message": "At first sight I was also thinking to delete this, but I wasn\u0027t sure with ONAP guidelines of removing code, so I picked up commenting out. I would be happy to remove this code and keep it simple in next patch. Thanks",
+      "parentUuid": "8091a914_bac33742",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 163,
+        "endChar": 8
+      },
+      "revId": "a8bf7e7bcdd297f1680e2dde99cf9698446548fc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
