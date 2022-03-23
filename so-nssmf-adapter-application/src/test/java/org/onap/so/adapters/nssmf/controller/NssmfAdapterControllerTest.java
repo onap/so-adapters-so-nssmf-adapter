@@ -22,7 +22,6 @@ package org.onap.so.adapters.nssmf.controller;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.onap.so.adapters.nssmf.controller.NssmfAdapterController;
 import org.onap.so.adapters.nssmf.service.NssmfManagerService;
 import org.onap.so.beans.nsmf.NssmfAdapterNBIRequest;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.onap.so.beans.nsmf.NetworkType.CORE;
 
 @RunWith(SpringRunner.class)
 public class NssmfAdapterControllerTest {

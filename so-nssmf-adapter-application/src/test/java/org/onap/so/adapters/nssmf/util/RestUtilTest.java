@@ -19,24 +19,17 @@
  */
 package org.onap.so.adapters.nssmf.util;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.hibernate.jdbc.Expectations;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.mockito.stubbing.Answer;
 import org.onap.aai.domain.yang.ServiceInstance;
-import org.onap.so.adapters.nssmf.entity.NssmfInfo;
 import org.onap.so.adapters.nssmf.entity.RestResponse;
 import org.onap.so.adapters.nssmf.enums.HttpMethod;
 import org.onap.so.adapters.nssmf.exceptions.ApplicationException;
@@ -47,11 +40,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.Optional;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 import static org.onap.so.beans.nsmf.NetworkType.CORE;
 
 @RunWith(SpringRunner.class)

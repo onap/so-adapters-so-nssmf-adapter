@@ -24,7 +24,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.HashMap;
 import java.util.Map;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 public class RestResponseTest {
