@@ -520,6 +520,67 @@ public class NssmfManagerServiceImplTest {
     }
 
     @Test
+    public void modifyAnNssi() throws Exception {
+        modifyNssi(ACCESS);
+    }
+
+
+    @Test
+    public void modifyCnNssi() throws Exception {
+        modifyNssi(CORE);
+    }
+
+    public void modifyNssi(NetworkType domainType) throws Exception {
+        NssmfInfo nssmf = new NssmfInfo();
+        nssmf.setUserName("nssmf-user");
+        nssmf.setPassword("nssmf-pass");
+        nssmf.setPort("8080");
+        nssmf.setIpAddress("127.0.0.1");
+        nssmf.setUrl("http://127.0.0.1:8080");
+
+        NssiResponse nssiRes = new NssiResponse();
+        nssiRes.setJobId("4b45d919816ccaa2b762df5120f72067");
+        nssiRes.setNssiId("NSSI-C-001-HDBNJ-NSSMF-01-A-ZX");
+
+        TokenResponse token = new TokenResponse();
+        token.setAccessToken("7512eb3feb5249eca5ddd742fedddd39");
+        token.setExpires(1800);
+
+        postStream = new ByteArrayInputStream(marshal(nssiRes).getBytes(UTF_8));
+        tokenStream = new ByteArrayInputStream(marshal(token).getBytes(UTF_8));
+
+        NssmfAdapterNBIRequest nbiRequest = createNbiRequest(domainType);
+
+        ServiceInfo serviceInfo = new ServiceInfo();
+        serviceInfo.setServiceUuid("8ee5926d-720b-4bb2-86f9-d20e921c143b");
+        serviceInfo.setServiceInvariantUuid("e75698d9-925a-4cdd-a6c0-edacbe6a0b51");
+        serviceInfo.setGlobalSubscriberId("5GCustomer");
+        serviceInfo.setServiceType("5G");
+        serviceInfo.setNsiId("NSI-M-001-HDBNJ-NSMF-01-A-ZX");
+        serviceInfo.setNssiId("NSSI-C-001-HDBNJ-NSSMF-01-A-ZX");
+
+        AllocateCnNssi cnNssi = new AllocateCnNssi();
+        cnNssi.setNssiId("NSST-C-001-HDBNJ-NSSMF-01-A-ZX");
+
+        AllocateAnNssi anNssi = new AllocateAnNssi();
+        anNssi.setNssiId("NSST-C-001-HDBNJ-NSSMF-01-A-ZX");
+
+        nbiRequest.setServiceInfo(serviceInfo);
+        nbiRequest.setAllocateCnNssi(cnNssi);
+        nbiRequest.setAllocateAnNssi(anNssi);
+
+        createCommonMock(200, nssmf);
+        ResponseEntity res = nssiManagerService.allocateNssi(nbiRequest);
+        assertNotNull(res);
+        assertNotNull(res.getBody());
+        NssiResponse allRes = unMarshal(res.getBody().toString(), NssiResponse.class);
+        if (!domainType.equals(ACCESS)) {
+            assertEquals(allRes.getJobId(), "4b45d919816ccaa2b762df5120f72067");
+        }
+        assertNotNull(allRes);
+    }
+
+    @Test
     public void testNssmfRequest() throws ApplicationException {
         NssmfRequest nssmfRequest = new NssmfRequest();
         String sst = marshal(nssmfRequest);
