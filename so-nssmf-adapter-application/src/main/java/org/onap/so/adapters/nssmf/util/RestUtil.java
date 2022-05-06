@@ -20,7 +20,9 @@
 
 package org.onap.so.adapters.nssmf.util;
 
-import javax.net.ssl.*;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.UriBuilder;
 import java.net.SocketTimeoutException;
 import java.net.URI;
@@ -28,14 +30,22 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.onap.aai.domain.yang.*;
+import org.onap.aai.domain.yang.EsrSystemInfo;
+import org.onap.aai.domain.yang.EsrSystemInfoList;
+import org.onap.aai.domain.yang.EsrThirdpartySdnc;
+import org.onap.aai.domain.yang.EsrThirdpartySdncList;
+import org.onap.aai.domain.yang.ServiceInstance;
 import org.onap.so.adapters.nssmf.exceptions.ApplicationException;
 import org.onap.so.adapters.nssmf.extclients.aai.AaiServiceProvider;
 import org.onap.so.adapters.nssmf.entity.TokenRequest;

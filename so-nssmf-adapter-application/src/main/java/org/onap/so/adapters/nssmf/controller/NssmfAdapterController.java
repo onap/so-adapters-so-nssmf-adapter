@@ -2,10 +2,14 @@ package org.onap.so.adapters.nssmf.controller;
 
 import org.onap.so.adapters.nssmf.annotation.RequestLogger;
 import org.onap.so.adapters.nssmf.service.NssmfManagerService;
-import org.onap.so.beans.nsmf.*;
+import org.onap.so.beans.nsmf.NssmfAdapterNBIRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @RestController

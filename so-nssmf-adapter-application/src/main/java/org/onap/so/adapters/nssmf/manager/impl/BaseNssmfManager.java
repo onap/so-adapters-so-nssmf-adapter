@@ -20,24 +20,31 @@
 
 package org.onap.so.adapters.nssmf.manager.impl;
 
+import org.onap.so.adapters.nssmf.enums.ActionType;
+import org.onap.so.adapters.nssmf.enums.ExecutorType;
+import org.onap.so.adapters.nssmf.enums.HttpMethod;
+import org.onap.so.adapters.nssmf.enums.SelectionType;
 import org.onap.so.adapters.nssmf.config.NssmfAdapterConfig;
 import org.onap.so.adapters.nssmf.consts.NssmfAdapterConsts;
 import org.onap.so.adapters.nssmf.entity.NssmfUrlInfo;
-import org.onap.so.adapters.nssmf.enums.*;
 import org.onap.so.adapters.nssmf.exceptions.ApplicationException;
 import org.onap.so.adapters.nssmf.entity.RestResponse;
 import org.onap.so.adapters.nssmf.manager.NssmfManager;
 import org.onap.so.adapters.nssmf.util.RestUtil;
-import org.onap.so.beans.nsmf.*;
+import org.onap.so.beans.nsmf.ActDeActNssi;
+import org.onap.so.beans.nsmf.DeAllocateNssi;
+import org.onap.so.beans.nsmf.EsrInfo;
+import org.onap.so.beans.nsmf.QuerySubnetCapability;
+import org.onap.so.beans.nsmf.NetworkType;
+import org.onap.so.beans.nsmf.NssmfAdapterNBIRequest;
+import org.onap.so.beans.nsmf.ServiceInfo;
 import org.onap.so.db.request.beans.ResourceOperationStatus;
 import org.onap.so.db.request.data.repository.ResourceOperationStatusRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import static org.onap.so.adapters.nssmf.util.NssmfAdapterUtil.marshal;
 
 public abstract class BaseNssmfManager implements NssmfManager {

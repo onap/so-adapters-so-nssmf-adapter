@@ -27,7 +27,6 @@ import org.onap.so.adapters.nssmf.exceptions.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.onap.logging.filter.base.ErrorCode;
-import org.springframework.stereotype.Component;
 import static org.onap.so.logger.LoggingAnchor.THREE;
 import static org.onap.so.logger.MessageEnum.RA_NS_EXC;
 

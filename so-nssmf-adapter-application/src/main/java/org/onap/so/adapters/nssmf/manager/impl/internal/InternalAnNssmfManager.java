@@ -22,7 +22,10 @@ package org.onap.so.adapters.nssmf.manager.impl.internal;
 
 import org.onap.so.adapters.nssmf.exceptions.ApplicationException;
 import org.onap.so.adapters.nssmf.manager.impl.InternalNssmfManager;
-import org.onap.so.beans.nsmf.*;
+import org.onap.so.beans.nsmf.AllocateAnNssi;
+import org.onap.so.beans.nsmf.AnSliceProfile;
+import org.onap.so.beans.nsmf.NssmfAdapterNBIRequest;
+import org.onap.so.beans.nsmf.NssmfRequest;
 import java.util.HashMap;
 import java.util.Map;
 import static org.onap.so.adapters.nssmf.util.NssmfAdapterUtil.marshal;
