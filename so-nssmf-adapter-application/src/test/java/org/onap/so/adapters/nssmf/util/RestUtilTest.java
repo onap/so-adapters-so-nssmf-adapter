@@ -27,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.onap.aai.domain.yang.ServiceInstance;
 import org.onap.so.adapters.nssmf.entity.RestResponse;
@@ -39,10 +38,8 @@ import org.onap.so.beans.nsmf.ServiceInfo;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.onap.so.beans.nsmf.NetworkType.CORE;
 
@@ -94,9 +91,7 @@ public class RestUtilTest {
         String content = "body content";
         commonMock();
 
-        RestUtil restUtil = new RestUtil(this.aaiSvcProv);
-        RestUtil util = Mockito.spy(restUtil);
-        doReturn(httpClient).when(util).getHttpsClient();
+        RestUtil util = new RestUtil(this.aaiSvcProv, this.httpClient);
 
         RestResponse restResponse = util.send(url, method, content, null);
         assertNotNull(restResponse);
@@ -105,7 +100,7 @@ public class RestUtilTest {
     @Test
     public void serviceInstanceOperationTest() throws NoSuchFieldException, IllegalAccessException {
 
-        RestUtil restUtil = new RestUtil(this.aaiSvcProv);
+        RestUtil restUtil = new RestUtil(this.aaiSvcProv, this.httpClient);
 
         ServiceInstance instance = new ServiceInstance();
         ServiceInfo info = getServiceInfo();
@@ -116,7 +111,7 @@ public class RestUtilTest {
 
     @Test
     public void getNssmfHostTest() throws NoSuchFieldException, IllegalAccessException {
-        RestUtil restUtil = new RestUtil(this.aaiSvcProv);
+        RestUtil restUtil = new RestUtil(this.aaiSvcProv, this.httpClient);
         try {
             restUtil.getNssmfHost(getEsrInfo());
         } catch (ApplicationException ex) {

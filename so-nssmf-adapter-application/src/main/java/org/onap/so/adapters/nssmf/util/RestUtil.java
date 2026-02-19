@@ -20,9 +20,6 @@
 
 package org.onap.so.adapters.nssmf.util;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.UriBuilder;
 import java.net.SocketTimeoutException;
 import java.net.URI;
@@ -36,9 +33,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.onap.aai.domain.yang.EsrSystemInfo;
@@ -81,6 +76,8 @@ public class RestUtil {
     private static final String TOKEN_URL = "/api/rest/securityManagement/v1" + "/oauth/token";
 
     private final AaiServiceProvider aaiSvcProv;
+
+    private final HttpClient httpClient;
 
     public void createServiceInstance(ServiceInstance serviceInstance, ServiceInfo serviceInfo) {
         aaiSvcProv.invokeCreateServiceInstance(serviceInstance, serviceInfo.getGlobalSubscriberId(),
@@ -165,7 +162,7 @@ public class RestUtil {
                     .setConnectionRequestTimeout(timeout).build();
             logger.debug("Sending request to NSSMF: " + content);
             req = getHttpReq(url, methodType, header, config, content);
-            res = getHttpsClient().execute(req);
+            res = httpClient.execute(req);
 
             String resContent = null;
             if (res.getEntity() != null) {
@@ -324,34 +321,6 @@ public class RestUtil {
     }
 
 
-    public HttpClient getHttpsClient() {
-
-        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-            @Override
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            @Override
-            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
-
-            @Override
-            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
-        }};
-
-        // Install the all-trusting trust manager
-        try {
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sc,
-                    new String[] {"TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"}, null, (s, sslSession) -> true);
-            return HttpClients.custom().setSSLSocketFactory(sslsf).build();
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
     private static void logError(String errMsg, Throwable t) {
         logger.error(FOUR, RA_NS_EXC.toString(), NSSMI_ADAPTER, AvailabilityError.getValue(), errMsg, t);
     }
@@ -360,4 +329,3 @@ public class RestUtil {
         logger.error(FOUR, RA_NS_EXC.toString(), NSSMI_ADAPTER, AvailabilityError.toString(), errMsg);
     }
 }
-
