@@ -1,0 +1,17 @@
+{
+  "esr-system-info": [
+    {
+      "esr-system-info-id": "nssmf-system-001",
+      "system-name": "NSSMF-CORE",
+      "type": "CORE",
+      "vendor": "huawei",
+      "ip-address": "localhost",
+      "port": "${wiremock.server.port}",
+      "user-name": "nssmf-user",
+      "password": "nssmf-pass",
+      "protocol": "https",
+      "ssl-cacert": "",
+      "resource-version": "1234567890"
+    }
+  ]
+}
