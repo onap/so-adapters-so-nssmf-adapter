@@ -31,7 +31,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
+import org.onap.so.adapters.nssmf.extclients.aai.AaiServiceProvider;
 import org.onap.aai.domain.yang.ServiceInstance;
 import org.onap.so.adapters.nssmf.config.NssmfAdapterConfig;
 import org.onap.so.adapters.nssmf.consts.NssmfAdapterConsts;
@@ -81,6 +83,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.onap.so.adapters.nssmf.util.NssmfAdapterUtil.marshal;
@@ -93,9 +96,10 @@ import static org.onap.so.beans.nsmf.ResourceSharingLevel.NON_SHARED;
 @RunWith(SpringRunner.class)
 public class NssmfManagerServiceImplTest {
 
-    @Mock
     private RestUtil restUtil;
 
+    @Mock
+    private AaiServiceProvider aaiSvcProv;
 
     private NssmfManagerServiceImpl nssiManagerService;
 
@@ -131,20 +135,17 @@ public class NssmfManagerServiceImplTest {
     public void setUp() throws Exception {
         initMocks(this);
 
-        nssiManagerService = new NssmfManagerServiceImpl(this.restUtil, this.repository, this.adapterConfig);
+        restUtil = Mockito.spy(new RestUtil(aaiSvcProv, httpClient));
 
-        when(this.restUtil.send(any(String.class), any(HttpMethod.class), any(), any(Header.class)))
-                .thenCallRealMethod();
-        when(this.restUtil.createResponse(any(Integer.class), any(String.class))).thenCallRealMethod();
+        nssiManagerService = new NssmfManagerServiceImpl(this.restUtil, this.repository, this.adapterConfig);
     }
 
     private void createCommonMock(int statusCode, NssmfInfo nssmf) throws Exception {
-        when(restUtil.getToken(any(NssmfInfo.class))).thenReturn("7512eb3feb5249eca5ddd742fedddd39");
-        when(restUtil.getHttpsClient()).thenReturn(httpClient);
-        when(restUtil.getServiceInstance(any())).thenReturn(new ServiceInstance());
+        doReturn("7512eb3feb5249eca5ddd742fedddd39").when(restUtil).getToken(any(NssmfInfo.class));
+        doReturn(new ServiceInstance()).when(restUtil).getServiceInstance(any());
 
         when(statusLine.getStatusCode()).thenReturn(statusCode);
-        when(restUtil.getNssmfHost(any(EsrInfo.class))).thenReturn(nssmf);
+        doReturn(nssmf).when(restUtil).getNssmfHost(any(EsrInfo.class));
 
         when(tokenResponse.getEntity()).thenReturn(tokenEntity);
         when(tokenResponse.getStatusLine()).thenReturn(statusLine);
