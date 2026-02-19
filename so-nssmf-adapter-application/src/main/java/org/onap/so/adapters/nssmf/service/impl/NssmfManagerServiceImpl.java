@@ -34,26 +34,24 @@ import org.onap.so.beans.nsmf.EsrInfo;
 import org.onap.so.beans.nsmf.NssmfAdapterNBIRequest;
 import org.onap.so.beans.nsmf.ServiceInfo;
 import org.onap.so.db.request.data.repository.ResourceOperationStatusRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
 @Service
 @ServiceLogger
+@RequiredArgsConstructor
 public class NssmfManagerServiceImpl implements NssmfManagerService {
 
-    @Autowired
-    private RestUtil restUtil;
+    private final RestUtil restUtil;
 
-    @Autowired
-    private ResourceOperationStatusRepository repository;
+    private final ResourceOperationStatusRepository repository;
 
-    @Autowired
-    private NssmfAdapterConfig nssmfAdapterConfig;
+    private final NssmfAdapterConfig nssmfAdapterConfig;
 
     @Override
-    public ResponseEntity allocateNssi(NssmfAdapterNBIRequest request) {
+    public ResponseEntity<String> allocateNssi(NssmfAdapterNBIRequest request) {
         try {
 
             if (StringUtils.isNotBlank(request.getServiceInfo().getNssiId())) {
@@ -68,7 +66,7 @@ public class NssmfManagerServiceImpl implements NssmfManagerService {
     }
 
     @Override
-    public ResponseEntity deAllocateNssi(NssmfAdapterNBIRequest request, String sliceProfileId) {
+    public ResponseEntity<String> deAllocateNssi(NssmfAdapterNBIRequest request, String sliceProfileId) {
         try {
             return buildResponse(
                     buildNssmfManager(request, ActionType.DEALLOCATE).deAllocateNssi(request, sliceProfileId));
@@ -78,7 +76,7 @@ public class NssmfManagerServiceImpl implements NssmfManagerService {
     }
 
     @Override
-    public ResponseEntity activateNssi(NssmfAdapterNBIRequest request, String snssai) {
+    public ResponseEntity<String> activateNssi(NssmfAdapterNBIRequest request, String snssai) {
         try {
             return buildResponse(buildNssmfManager(request, ActionType.ACTIVATE).activateNssi(request, snssai));
         } catch (ApplicationException e) {
@@ -87,7 +85,7 @@ public class NssmfManagerServiceImpl implements NssmfManagerService {
     }
 
     @Override
-    public ResponseEntity deActivateNssi(NssmfAdapterNBIRequest request, String snssai) {
+    public ResponseEntity<String> deActivateNssi(NssmfAdapterNBIRequest request, String snssai) {
         try {
             return buildResponse(buildNssmfManager(request, ActionType.DEACTIVATE).deActivateNssi(request, snssai));
         } catch (ApplicationException e) {
@@ -96,7 +94,7 @@ public class NssmfManagerServiceImpl implements NssmfManagerService {
     }
 
     @Override
-    public ResponseEntity queryJobStatus(NssmfAdapterNBIRequest jobReq, String jobId) {
+    public ResponseEntity<String> queryJobStatus(NssmfAdapterNBIRequest jobReq, String jobId) {
         try {
             return buildResponse(buildNssmfManager(jobReq, ActionType.QUERY_JOB_STATUS).queryJobStatus(jobReq, jobId));
         } catch (ApplicationException e) {
@@ -105,7 +103,7 @@ public class NssmfManagerServiceImpl implements NssmfManagerService {
     }
 
     @Override
-    public ResponseEntity queryNSSISelectionCapability(NssmfAdapterNBIRequest nbiRequest) {
+    public ResponseEntity<String> queryNSSISelectionCapability(NssmfAdapterNBIRequest nbiRequest) {
         EsrInfo esrInfo = nbiRequest.getEsrInfo();
         try {
             return buildResponse(buildNssmfManager(esrInfo, ActionType.QUERY_NSSI_SELECTION_CAPABILITY, null)
@@ -116,7 +114,7 @@ public class NssmfManagerServiceImpl implements NssmfManagerService {
     }
 
     @Override
-    public ResponseEntity querySubnetCapability(NssmfAdapterNBIRequest nbiRequest) {
+    public ResponseEntity<String> querySubnetCapability(NssmfAdapterNBIRequest nbiRequest) {
         EsrInfo esrInfo = nbiRequest.getEsrInfo();
         try {
             return buildResponse(buildNssmfManager(esrInfo, ActionType.QUERY_SUB_NET_CAPABILITY, null)
@@ -126,7 +124,7 @@ public class NssmfManagerServiceImpl implements NssmfManagerService {
         }
     }
 
-    private ResponseEntity buildResponse(RestResponse rsp) {
+    private ResponseEntity<String> buildResponse(RestResponse rsp) {
         return ResponseEntity.status(rsp.getStatus()).body(rsp.getResponseContent());
     }
 

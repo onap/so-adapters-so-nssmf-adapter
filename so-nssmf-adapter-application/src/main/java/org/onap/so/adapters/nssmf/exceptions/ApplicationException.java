@@ -53,7 +53,7 @@ public class ApplicationException extends Exception {
         this.errorMsg = errorMsg;
     }
 
-    public ResponseEntity buildErrorResponse() {
+    public ResponseEntity<String> buildErrorResponse() {
         String message;
         try {
             ErrorResponse err = new ErrorResponse(errorCode, errorMsg);

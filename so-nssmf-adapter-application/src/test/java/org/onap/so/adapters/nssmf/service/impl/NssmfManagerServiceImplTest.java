@@ -131,20 +131,7 @@ public class NssmfManagerServiceImplTest {
     public void setUp() throws Exception {
         initMocks(this);
 
-        nssiManagerService = new NssmfManagerServiceImpl();
-
-        Field restUtil = nssiManagerService.getClass().getDeclaredField("restUtil");
-        restUtil.setAccessible(true);
-        restUtil.set(nssiManagerService, this.restUtil);
-
-        Field adapterConfig = nssiManagerService.getClass().getDeclaredField("nssmfAdapterConfig");
-        adapterConfig.setAccessible(true);
-        adapterConfig.set(nssiManagerService, this.adapterConfig);
-
-        Field repository = nssiManagerService.getClass().getDeclaredField("repository");
-        repository.setAccessible(true);
-        repository.set(nssiManagerService, this.repository);
-        // nssiManagerService.setRestUtil(this.restUtil);
+        nssiManagerService = new NssmfManagerServiceImpl(this.restUtil, this.repository, this.adapterConfig);
 
         when(this.restUtil.send(any(String.class), any(HttpMethod.class), any(), any(Header.class)))
                 .thenCallRealMethod();

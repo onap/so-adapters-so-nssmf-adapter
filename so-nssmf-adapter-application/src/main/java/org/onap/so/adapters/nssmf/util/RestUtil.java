@@ -55,9 +55,9 @@ import org.onap.so.adapters.nssmf.entity.NssmfInfo;
 import org.onap.so.adapters.nssmf.entity.RestResponse;
 import org.onap.so.beans.nsmf.EsrInfo;
 import org.onap.so.beans.nsmf.ServiceInfo;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.onap.so.adapters.nssmf.enums.HttpMethod.POST;
@@ -69,6 +69,7 @@ import static org.onap.so.logger.LoggingAnchor.FOUR;
 import static org.onap.so.logger.MessageEnum.RA_NS_EXC;
 
 @Component
+@RequiredArgsConstructor
 public class RestUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(RestUtil.class);
@@ -79,8 +80,7 @@ public class RestUtil {
 
     private static final String TOKEN_URL = "/api/rest/securityManagement/v1" + "/oauth/token";
 
-    @Autowired
-    private AaiServiceProvider aaiSvcProv;
+    private final AaiServiceProvider aaiSvcProv;
 
     public void createServiceInstance(ServiceInstance serviceInstance, ServiceInfo serviceInfo) {
         aaiSvcProv.invokeCreateServiceInstance(serviceInstance, serviceInfo.getGlobalSubscriberId(),
