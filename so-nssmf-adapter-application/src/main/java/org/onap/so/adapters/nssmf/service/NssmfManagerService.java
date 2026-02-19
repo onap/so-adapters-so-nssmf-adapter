@@ -28,18 +28,18 @@ import org.springframework.stereotype.Service;
 @Service
 @ServiceLogger
 public interface NssmfManagerService {
-    ResponseEntity allocateNssi(NssmfAdapterNBIRequest allocateRequest);
+    ResponseEntity<String> allocateNssi(NssmfAdapterNBIRequest allocateRequest);
 
-    ResponseEntity deAllocateNssi(NssmfAdapterNBIRequest allocateRequest, String sliceProfileId);
+    ResponseEntity<String> deAllocateNssi(NssmfAdapterNBIRequest allocateRequest, String sliceProfileId);
 
-    ResponseEntity activateNssi(NssmfAdapterNBIRequest deActRequest, String snssai);
+    ResponseEntity<String> activateNssi(NssmfAdapterNBIRequest deActRequest, String snssai);
 
-    ResponseEntity deActivateNssi(NssmfAdapterNBIRequest nssiDeActivate, String snssai);
+    ResponseEntity<String> deActivateNssi(NssmfAdapterNBIRequest nssiDeActivate, String snssai);
 
-    ResponseEntity queryJobStatus(NssmfAdapterNBIRequest jobReq, String jobId);
+    ResponseEntity<String> queryJobStatus(NssmfAdapterNBIRequest jobReq, String jobId);
 
-    ResponseEntity queryNSSISelectionCapability(NssmfAdapterNBIRequest nbiRequest);
+    ResponseEntity<String> queryNSSISelectionCapability(NssmfAdapterNBIRequest nbiRequest);
 
-    ResponseEntity querySubnetCapability(NssmfAdapterNBIRequest nbiRequest);
+    ResponseEntity<String> querySubnetCapability(NssmfAdapterNBIRequest nbiRequest);
 
 }

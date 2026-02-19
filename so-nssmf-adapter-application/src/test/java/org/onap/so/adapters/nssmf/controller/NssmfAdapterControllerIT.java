@@ -45,9 +45,10 @@ import org.onap.so.beans.nsmf.PerfReqEmbb;
 import org.onap.so.beans.nsmf.QuerySubnetCapability;
 import org.onap.so.beans.nsmf.ResourceSharingLevel;
 import org.onap.so.beans.nsmf.ServiceInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestConstructor;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
@@ -80,6 +81,8 @@ import static org.mockito.Mockito.when;
     }
 )
 @ActiveProfiles("it")
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@RequiredArgsConstructor
 public class NssmfAdapterControllerIT {
 
     private static WireMockServer wireMockServer;
@@ -87,8 +90,7 @@ public class NssmfAdapterControllerIT {
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private final TestRestTemplate restTemplate;
 
     @MockBean
     private AaiServiceProvider aaiServiceProvider;

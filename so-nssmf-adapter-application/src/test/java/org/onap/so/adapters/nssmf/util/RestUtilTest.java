@@ -94,7 +94,7 @@ public class RestUtilTest {
         String content = "body content";
         commonMock();
 
-        RestUtil restUtil = new RestUtil();
+        RestUtil restUtil = new RestUtil(this.aaiSvcProv);
         RestUtil util = Mockito.spy(restUtil);
         doReturn(httpClient).when(util).getHttpsClient();
 
@@ -105,11 +105,7 @@ public class RestUtilTest {
     @Test
     public void serviceInstanceOperationTest() throws NoSuchFieldException, IllegalAccessException {
 
-        RestUtil restUtil = new RestUtil();
-
-        Field aaiSvcProv = restUtil.getClass().getDeclaredField("aaiSvcProv");
-        aaiSvcProv.setAccessible(true);
-        aaiSvcProv.set(restUtil, this.aaiSvcProv);
+        RestUtil restUtil = new RestUtil(this.aaiSvcProv);
 
         ServiceInstance instance = new ServiceInstance();
         ServiceInfo info = getServiceInfo();
@@ -120,11 +116,7 @@ public class RestUtilTest {
 
     @Test
     public void getNssmfHostTest() throws NoSuchFieldException, IllegalAccessException {
-        RestUtil restUtil = new RestUtil();
-
-        Field aaiSvcProv = restUtil.getClass().getDeclaredField("aaiSvcProv");
-        aaiSvcProv.setAccessible(true);
-        aaiSvcProv.set(restUtil, this.aaiSvcProv);
+        RestUtil restUtil = new RestUtil(this.aaiSvcProv);
         try {
             restUtil.getNssmfHost(getEsrInfo());
         } catch (ApplicationException ex) {

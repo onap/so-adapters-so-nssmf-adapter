@@ -48,11 +48,7 @@ public class NssmfAdapterControllerTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        controller = new NssmfAdapterController();
-
-        Field nssmfManagerService = controller.getClass().getDeclaredField("nssmfManagerService");
-        nssmfManagerService.setAccessible(true);
-        nssmfManagerService.set(controller, this.nssmfManagerService);
+        controller = new NssmfAdapterController(this.nssmfManagerService);
     }
 
 
