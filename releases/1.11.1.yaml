@@ -1,0 +1,8 @@
+---
+distribution_type: 'container'
+container_release_tag: '1.11.1'
+project: 'so'
+ref: '1ffdf552ee9305fdfc2b24683708b96202a39102'
+containers:
+    - name: 'so/so-nssmf-adapter'
+      version: '1.11.1-20260219T1208'
