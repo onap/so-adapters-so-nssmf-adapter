@@ -23,6 +23,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,8 @@ import org.onap.so.beans.nsmf.QuerySubnetCapability;
 import org.onap.so.beans.nsmf.ResourceSharingLevel;
 import org.onap.so.beans.nsmf.ServiceInfo;
 import lombok.RequiredArgsConstructor;
+import org.onap.so.db.request.beans.ResourceOperationStatus;
+import org.onap.so.db.request.data.repository.ResourceOperationStatusRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
@@ -95,6 +98,8 @@ public class NssmfAdapterControllerIT {
     @MockBean
     private AaiServiceProvider aaiServiceProvider;
 
+    private final ResourceOperationStatusRepository repository;
+
     @BeforeAll
     public static void startWireMock() {
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
@@ -116,6 +121,11 @@ public class NssmfAdapterControllerIT {
         wireMockServer.resetAll();
         setupAaiMocks();
         setupNssmfMocks();
+    }
+
+    @AfterEach
+    public void cleanup() {
+        repository.deleteAll();
     }
 
     private void setupAaiMocks() {
@@ -174,7 +184,7 @@ public class NssmfAdapterControllerIT {
                         .withBodyFile("deactivate-nssi-response.json")
                         .withStatus(200)));
 
-        wireMockServer.stubFor(post(urlPathMatching(".*/jobs/.*"))
+        wireMockServer.stubFor(WireMock.get(urlPathMatching(".*/jobs/.*"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("query-job-status-response.json")
@@ -240,6 +250,49 @@ public class NssmfAdapterControllerIT {
         assertThat(response.getBody()).contains("jobId");
 
         wireMockServer.verify(postRequestedFor(urlPathMatching(".*/oauth/token")));
+    }
+
+    @Test
+    public void queryJobStatus_shouldReturnJobStatusResponse() {
+        ResourceOperationStatus operationStatus = new ResourceOperationStatus();
+        operationStatus.setOperationId("4b45d919816ccaa2b762df5120f72067");
+        operationStatus.setServiceId("NSI-M-001-HDBNJ-NSMF-01-A-ZX");
+        operationStatus.setResourceTemplateUUID("8ee5926d-720b-4bb2-86f9-d20e921c143b");
+        operationStatus.setOperType("ALLOCATE");
+        operationStatus.setStatus("processing");
+        operationStatus.setProgress("50");
+        operationStatus.setResourceInstanceID("NSSI-C-001-HDBNJ-NSSMF-01-A-ZX");
+        repository.save(operationStatus);
+
+        NssmfAdapterNBIRequest request = createBaseRequest();
+        request.setResponseId("4b45d919816ccaa2b762df5120f72067");
+        HttpEntity<NssmfAdapterNBIRequest> entity = createHttpEntity(request);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "/api/rest/provMns/v1/NSS/jobs/4b45d919816ccaa2b762df5120f72067", entity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).contains("responseDescriptor");
+        assertThat(response.getBody()).contains("progress");
+        assertThat(response.getBody()).contains("100");
+        assertThat(response.getBody()).contains("finished");
+    }
+
+    @Test
+    public void allocateNssi_whenNssmfReturnsError_shouldPropagateErrorStatus() {
+        wireMockServer.stubFor(post(urlPathMatching(".*/SliceProfiles"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"errorCode\": 503, \"errorDescription\": \"Service Unavailable\"}")
+                        .withStatus(503)));
+
+        NssmfAdapterNBIRequest request = createAllocateRequest();
+        HttpEntity<NssmfAdapterNBIRequest> entity = createHttpEntity(request);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                "/api/rest/provMns/v1/NSS/SliceProfiles", entity, String.class);
+
+        assertThat(response.getStatusCode().value()).isGreaterThanOrEqualTo(500);
     }
 
     @Test
