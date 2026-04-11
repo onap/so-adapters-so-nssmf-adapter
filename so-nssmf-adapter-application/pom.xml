@@ -4,6 +4,7 @@
   ~* ONAP - SO
   ~*================================================================================
   ~* Copyright (C) 2020 Huawei Technologies Co., Ltd. All rights reserved.
+  ~* Copyright (C) 2026 Deutsche Telekom AG
   ~*================================================================================
   ~* Licensed under the Apache License, Version 2.0 (the "License");
   ~* you may not use this file except in compliance with the License.
@@ -26,10 +27,10 @@
     <parent>
         <groupId>org.onap.so.adapters.so-nssmf-adapter</groupId>
         <artifactId>so-nssmf-adapter</artifactId>
-        <version>1.12.0-SNAPSHOT</version>
+        <version>1.17.0-SNAPSHOT</version>
     </parent>
     <artifactId>so-nssmf-adapter-application</artifactId>
-    <version>1.11.1-SNAPSHOT</version>
+    <version>1.17.0-SNAPSHOT</version>
     <name>SO NSSMF Application Jar</name>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -209,6 +210,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.vintage</groupId>
