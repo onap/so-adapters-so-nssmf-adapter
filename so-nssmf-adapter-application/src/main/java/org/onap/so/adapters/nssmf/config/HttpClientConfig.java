@@ -32,8 +32,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HttpClientConfig {
 
-    @Bean
-    public HttpClient httpClient() {
+    @Bean("nssmfHttpClient")
+    public HttpClient nssmfHttpClient() {
         TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
             @Override
             public java.security.cert.X509Certificate[] getAcceptedIssuers() {
