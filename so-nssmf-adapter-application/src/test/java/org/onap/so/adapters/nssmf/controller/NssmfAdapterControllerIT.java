@@ -147,10 +147,10 @@ public class NssmfAdapterControllerIT {
 
         when(aaiServiceProvider.invokeGetThirdPartySdncList()).thenReturn(sdncList);
         when(aaiServiceProvider.invokeGetThirdPartySdncEsrSystemInfo(anyString())).thenReturn(systemInfoList);
-        when(aaiServiceProvider.invokeGetServiceInstance(anyString(), anyString(), anyString()))
+        when(aaiServiceProvider.invokeGetServiceInstance(any(), any(), any()))
                 .thenReturn(new ServiceInstance());
-        doNothing().when(aaiServiceProvider).invokeCreateServiceInstance(any(), anyString(), anyString(), anyString());
-        doNothing().when(aaiServiceProvider).invokeDeleteServiceInstance(anyString(), anyString(), anyString());
+        doNothing().when(aaiServiceProvider).invokeCreateServiceInstance(any(), any(), any(), any());
+        doNothing().when(aaiServiceProvider).invokeDeleteServiceInstance(any(), any(), any());
     }
 
     private void setupNssmfMocks() throws Exception {
@@ -322,6 +322,7 @@ public class NssmfAdapterControllerIT {
     private HttpEntity<NssmfAdapterNBIRequest> createHttpEntity(NssmfAdapterNBIRequest request) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         return new HttpEntity<>(request, headers);
     }
 
