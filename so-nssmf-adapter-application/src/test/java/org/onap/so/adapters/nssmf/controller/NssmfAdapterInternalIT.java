@@ -339,6 +339,7 @@ public class NssmfAdapterInternalIT {
     private HttpEntity<NssmfAdapterNBIRequest> createHttpEntity(NssmfAdapterNBIRequest request) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         return new HttpEntity<>(request, headers);
     }
 }

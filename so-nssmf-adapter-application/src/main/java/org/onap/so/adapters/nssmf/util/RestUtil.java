@@ -53,6 +53,7 @@ import org.onap.so.beans.nsmf.ServiceInfo;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.onap.so.adapters.nssmf.enums.HttpMethod.POST;
@@ -68,15 +69,11 @@ import static org.onap.so.logger.MessageEnum.RA_NS_EXC;
 public class RestUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(RestUtil.class);
-
     private static final int DEFAULT_TIME_OUT = 60000;
-
     private static final String NSSMI_ADAPTER = "NSSMI Adapter";
-
     private static final String TOKEN_URL = "/api/rest/securityManagement/v1" + "/oauth/token";
-
     private final AaiServiceProvider aaiSvcProv;
-
+    @Qualifier("nssmfHttpClient")
     private final HttpClient httpClient;
 
     public void createServiceInstance(ServiceInstance serviceInstance, ServiceInfo serviceInfo) {
