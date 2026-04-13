@@ -1,0 +1,9 @@
+---
+distribution_type: 'container'
+container_release_tag: '1.12.0'
+project: 'so'
+log_dir: 'so-adapters-so-nssmf-adapter-maven-docker-stage-master/795/'
+ref: 'd0d0e16b4a77b2e4bcaa86901f66dd319e468832'
+containers:
+    - name: 'so/so-nssmf-adapter'
+      version: '1.12.0-20260412T1227'
