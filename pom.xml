@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.onap.so</groupId>
         <artifactId>so</artifactId>
-        <version>1.19.0</version>
+        <version>1.19.1-SNAPSHOT</version>
     </parent>
     <groupId>org.onap.so.adapters.so-nssmf-adapter</groupId>
     <artifactId>so-nssmf-adapter</artifactId>
@@ -31,7 +31,7 @@
         <snakeyaml-version>0.11</snakeyaml-version>
         <hamcrest-version>2.2</hamcrest-version>
         <equalsverifier-version>3.4.1</equalsverifier-version>
-        <so-core-version>1.19.0</so-core-version>
+        <so-core-version>1.19.1-SNAPSHOT</so-core-version>
         <swagger.rt.rs.version>3.1.7</swagger.rt.rs.version>
     </properties>
 
