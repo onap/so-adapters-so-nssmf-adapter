@@ -23,9 +23,11 @@ package org.onap.so.adapters.nssmf.config;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -53,7 +55,9 @@ public class HttpClientConfig {
 
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sc,
                     new String[] {"TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"}, null, (s, sslSession) -> true);
-            return HttpClients.custom().setSSLSocketFactory(sslsf).build();
+            HttpClientConnectionManager connectionManager =
+                    PoolingHttpClientConnectionManagerBuilder.create().setSSLSocketFactory(sslsf).build();
+            return HttpClients.custom().setConnectionManager(connectionManager).build();
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }

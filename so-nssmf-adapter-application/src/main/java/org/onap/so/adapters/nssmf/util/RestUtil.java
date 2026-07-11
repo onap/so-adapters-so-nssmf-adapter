@@ -20,22 +20,22 @@
 
 package org.onap.so.adapters.nssmf.util;
 
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilder;
 import java.net.SocketTimeoutException;
-import java.net.URI;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPatch;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpPut;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.http.message.BasicHeader;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.util.Timeout;
 import org.onap.aai.domain.yang.EsrSystemInfo;
 import org.onap.aai.domain.yang.EsrSystemInfoList;
 import org.onap.aai.domain.yang.EsrThirdpartySdnc;
@@ -55,7 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+import static org.apache.hc.core5.http.ContentType.APPLICATION_JSON;
 import static org.onap.so.adapters.nssmf.enums.HttpMethod.POST;
 import static org.onap.so.adapters.nssmf.util.NssmfAdapterUtil.BAD_REQUEST;
 import static org.onap.so.adapters.nssmf.util.NssmfAdapterUtil.marshal;
@@ -147,33 +147,34 @@ public class RestUtil {
 
     public RestResponse send(String url, HttpMethod methodType, String content, Header header) {
 
-        HttpRequestBase req = null;
-        HttpResponse res = null;
+        HttpUriRequestBase req = null;
+        ClassicHttpResponse res = null;
 
         logger.debug("Beginning to send message {}: {}", methodType, url);
 
         try {
             int timeout = DEFAULT_TIME_OUT;
 
-            RequestConfig config = RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout)
-                    .setConnectionRequestTimeout(timeout).build();
+            RequestConfig config = RequestConfig.custom().setResponseTimeout(Timeout.ofMilliseconds(timeout))
+                    .setConnectTimeout(Timeout.ofMilliseconds(timeout))
+                    .setConnectionRequestTimeout(Timeout.ofMilliseconds(timeout)).build();
             logger.debug("Sending request to NSSMF: " + content);
             req = getHttpReq(url, methodType, header, config, content);
-            res = httpClient.execute(req);
+            res = (ClassicHttpResponse) httpClient.execute(req);
 
             String resContent = null;
             if (res.getEntity() != null) {
                 resContent = EntityUtils.toString(res.getEntity(), "UTF-8");
             }
 
-            int statusCode = res.getStatusLine().getStatusCode();
-            String statusMessage = res.getStatusLine().getReasonPhrase();
+            int statusCode = res.getCode();
+            String statusMessage = res.getReasonPhrase();
             logger.info("NSSMF Response: {} {}", statusCode,
                     statusMessage + (resContent == null ? "" : System.lineSeparator() + resContent));
 
-            if (res.getStatusLine().getStatusCode() >= 300) {
-                String errMsg = "{\n  \"errorCode\": " + res.getStatusLine().getStatusCode()
-                        + "\n  \"errorDescription\": " + statusMessage + "\n}";
+            if (res.getCode() >= 300) {
+                String errMsg = "{\n  \"errorCode\": " + res.getCode() + "\n  \"errorDescription\": " + statusMessage
+                        + "\n}";
                 logError(errMsg);
                 return createResponse(statusCode, errMsg);
             }
@@ -184,7 +185,7 @@ public class RestUtil {
 
             return createResponse(statusCode, resContent);
 
-        } catch (SocketTimeoutException | ConnectTimeoutException e) {
+        } catch (SocketTimeoutException e) {
             String errMsg = "Request to NSSMF timed out";
             logError(errMsg, e);
             return createResponse(408, errMsg);
@@ -217,9 +218,9 @@ public class RestUtil {
         return restResponse;
     }
 
-    private HttpRequestBase getHttpReq(String url, HttpMethod method, Header header, RequestConfig config,
+    private HttpUriRequestBase getHttpReq(String url, HttpMethod method, Header header, RequestConfig config,
             String content) throws ApplicationException {
-        HttpRequestBase base;
+        HttpUriRequestBase base;
         switch (method) {
             case POST:
                 HttpPost post = new HttpPost(url);
@@ -228,7 +229,7 @@ public class RestUtil {
                 break;
 
             case GET:
-                HttpGetWithBody get = new HttpGetWithBody(url);
+                HttpGet get = new HttpGet(url);
                 if (content != null) {
                     get.setEntity(new StringEntity(content, APPLICATION_JSON));
                 }
@@ -246,7 +247,7 @@ public class RestUtil {
                 break;
 
             case DELETE:
-                HttpDeleteWithBody delete = new HttpDeleteWithBody(url);
+                HttpDelete delete = new HttpDelete(url);
                 if (content != null) {
                     delete.setEntity(new StringEntity(content, APPLICATION_JSON));
                 }
@@ -270,53 +271,6 @@ public class RestUtil {
         String nssmfUrl = nssmfInfo.getUrl() + allocateUrl;
         return send(nssmfUrl, post, allocateReq, header);
     }
-
-    class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
-        public static final String METHOD_NAME = "DELETE";
-
-        @Override
-        public String getMethod() {
-            return METHOD_NAME;
-        }
-
-        public HttpDeleteWithBody(final String uri) {
-            super();
-            setURI(URI.create(uri));
-        }
-
-        public HttpDeleteWithBody(final URI uri) {
-            super();
-            setURI(uri);
-        }
-
-        public HttpDeleteWithBody() {
-            super();
-        }
-    }
-
-    class HttpGetWithBody extends HttpEntityEnclosingRequestBase {
-        public static final String METHOD_NAME = "GET";
-
-        public HttpGetWithBody() {
-            super();
-        }
-
-        public HttpGetWithBody(final String uri) {
-            super();
-            setURI(URI.create(uri));
-        }
-
-        public HttpGetWithBody(final URI uri) {
-            super();
-            setURI(uri);
-        }
-
-        @Override
-        public String getMethod() {
-            return METHOD_NAME;
-        }
-    }
-
 
     private static void logError(String errMsg, Throwable t) {
         logger.error(FOUR, RA_NS_EXC.toString(), NSSMI_ADAPTER, AvailabilityError.getValue(), errMsg, t);

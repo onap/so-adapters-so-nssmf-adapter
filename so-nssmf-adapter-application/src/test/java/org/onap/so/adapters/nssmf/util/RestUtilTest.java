@@ -19,10 +19,9 @@
  */
 package org.onap.so.adapters.nssmf.util;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.client5.http.classic.HttpClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,15 +49,12 @@ public class RestUtilTest {
     @Mock
     public HttpClient httpClient;
     @Mock
-    private HttpResponse tokenResponse;
+    private ClassicHttpResponse tokenResponse;
 
     @Mock
     private HttpEntity tokenEntity;
 
     private InputStream tokenStream;
-
-    @Mock
-    private StatusLine statusLine;
 
     @Mock
     private AaiServiceProvider aaiSvcProv;
@@ -75,7 +71,6 @@ public class RestUtilTest {
     private void commonMock() throws IOException, ApplicationException {
 
         when(tokenResponse.getEntity()).thenReturn(tokenEntity);
-        when(tokenResponse.getStatusLine()).thenReturn(statusLine);
 
         when(tokenEntity.getContent()).thenReturn(tokenStream);
 

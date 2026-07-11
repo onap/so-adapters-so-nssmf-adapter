@@ -21,12 +21,10 @@
 package org.onap.so.adapters.nssmf.service.impl;
 
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -104,19 +102,16 @@ public class NssmfManagerServiceImplTest {
     private NssmfManagerServiceImpl nssiManagerService;
 
     @Mock
-    private HttpResponse tokenResponse;
+    private ClassicHttpResponse tokenResponse;
 
     @Mock
     private HttpEntity tokenEntity;
 
     @Mock
-    private HttpResponse commonResponse;
+    private ClassicHttpResponse commonResponse;
 
     @Mock
     private HttpEntity commonEntity;
-
-    @Mock
-    private StatusLine statusLine;
 
     @Mock
     private HttpClient httpClient;
@@ -144,25 +139,24 @@ public class NssmfManagerServiceImplTest {
         doReturn("7512eb3feb5249eca5ddd742fedddd39").when(restUtil).getToken(any(NssmfInfo.class));
         doReturn(new ServiceInstance()).when(restUtil).getServiceInstance(any());
 
-        when(statusLine.getStatusCode()).thenReturn(statusCode);
+        when(tokenResponse.getCode()).thenReturn(statusCode);
+        when(commonResponse.getCode()).thenReturn(statusCode);
         doReturn(nssmf).when(restUtil).getNssmfHost(any(EsrInfo.class));
 
         when(tokenResponse.getEntity()).thenReturn(tokenEntity);
-        when(tokenResponse.getStatusLine()).thenReturn(statusLine);
         when(tokenEntity.getContent()).thenReturn(tokenStream);
 
         when(commonResponse.getEntity()).thenReturn(commonEntity);
-        when(commonResponse.getStatusLine()).thenReturn(statusLine);
         when(commonEntity.getContent()).thenReturn(postStream);
 
         when(adapterConfig.getInfraAuth()).thenReturn("SW5mcmFQb3J0YWxDbGllbnQ6cGFzc3dvcmQxJA==");
 
-        Answer<HttpResponse> answer = invocation -> {
+        Answer<ClassicHttpResponse> answer = invocation -> {
             Object[] arguments = invocation.getArguments();
             if (arguments != null && arguments.length == 1 && arguments[0] != null) {
 
-                HttpRequestBase base = (HttpRequestBase) arguments[0];
-                if (base.getURI().toString().endsWith("/oauth/token")) {
+                HttpUriRequestBase base = (HttpUriRequestBase) arguments[0];
+                if (base.getUri().toString().endsWith("/oauth/token")) {
                     return tokenResponse;
                 } else {
                     return commonResponse;
@@ -171,7 +165,7 @@ public class NssmfManagerServiceImplTest {
             return commonResponse;
         };
 
-        doAnswer(answer).when(httpClient).execute(any(HttpRequestBase.class));
+        doAnswer(answer).when(httpClient).execute(any(HttpUriRequestBase.class));
 
     }
 
