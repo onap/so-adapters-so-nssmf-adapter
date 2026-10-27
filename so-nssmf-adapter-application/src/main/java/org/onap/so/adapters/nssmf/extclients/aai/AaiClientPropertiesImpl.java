@@ -25,21 +25,22 @@ import java.net.URL;
 import org.onap.aaiclient.client.aai.AAIProperties;
 import org.onap.aaiclient.client.aai.AAIVersion;
 import org.onap.so.spring.SpringContextHelper;
+import org.onap.so.utils.BasicAuth;
 import org.springframework.context.ApplicationContext;
 
 public class AaiClientPropertiesImpl implements AAIProperties {
 
     private final String endpoint;
 
-    private final String encryptedBasicAuth;
+    private final String username;
 
-    private final String encrytptionKey;
+    private final String password;
 
     public AaiClientPropertiesImpl() {
         final ApplicationContext context = SpringContextHelper.getAppContext();
         this.endpoint = context.getEnvironment().getProperty("aai.endpoint");
-        this.encryptedBasicAuth = context.getEnvironment().getProperty("aai.auth");
-        this.encrytptionKey = context.getEnvironment().getProperty("mso.key");
+        this.username = context.getEnvironment().getProperty(BasicAuth.AAI_USERNAME_PROPERTY);
+        this.password = context.getEnvironment().getProperty(BasicAuth.AAI_PASSWORD_PROPERTY);
     }
 
     @Override
@@ -48,13 +49,13 @@ public class AaiClientPropertiesImpl implements AAIProperties {
     }
 
     @Override
-    public String getAuth() {
-        return encryptedBasicAuth;
+    public String getUsername() {
+        return username;
     }
 
     @Override
-    public String getKey() {
-        return encrytptionKey;
+    public String getPassword() {
+        return password;
     }
 
     @Override

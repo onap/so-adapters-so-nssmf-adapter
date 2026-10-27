@@ -18,7 +18,6 @@
 # ============LICENSE_END=========================================================
 #/
 aai:
-  auth: 2A11B07DB6214A839394AA1EC5844695F5114FC407FF5422625FB00175A3DCB8A1FF745F22867EFA72D5369D599BBD88DA8BED4233CF5586
   endpoint: https://aai.onap:30233
 logging:
   path: logs
@@ -51,16 +50,13 @@ server:
     max-threads: 50
 
 mso:
-  key: 07a7159d3bf51a0e53be7a8f89699be7
   site-name: localSite
   logPath: ./logs/nssmf
   adapters:
     requestDb:
       endpoint: https://so-request-db-adapter.{{ include "common.namespace" . }}:8083
-      auth: Basic YnBlbDpwYXNzd29yZDEk
   infra:
     endpoint: http://so.onap:8080
-    auth: Basic SW5mcmFQb3J0YWxDbGllbnQ6cGFzc3dvcmQxJA==
 
 #Actuator
 management:

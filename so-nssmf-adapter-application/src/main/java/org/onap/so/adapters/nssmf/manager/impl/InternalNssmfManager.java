@@ -105,7 +105,8 @@ public abstract class InternalNssmfManager extends BaseNssmfManager {
 
     // internal
     private RestResponse sendInternalRequest(String content) {
-        Header header = new BasicHeader("Authorization", adapterConfig.getInfraAuth());
+        String auth = adapterConfig.getInfraAuth();
+        Header header = auth == null ? null : new BasicHeader("Authorization", auth);
         this.nssmfUrl = adapterConfig.getInfraEndpoint() + this.nssmfUrl;
         return restUtil.send(this.nssmfUrl, this.httpMethod, content, header);
     }

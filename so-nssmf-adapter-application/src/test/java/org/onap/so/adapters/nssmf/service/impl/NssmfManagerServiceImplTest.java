@@ -149,7 +149,7 @@ public class NssmfManagerServiceImplTest {
         when(commonResponse.getEntity()).thenReturn(commonEntity);
         when(commonEntity.getContent()).thenReturn(postStream);
 
-        when(adapterConfig.getInfraAuth()).thenReturn("SW5mcmFQb3J0YWxDbGllbnQ6cGFzc3dvcmQxJA==");
+        when(adapterConfig.getInfraAuth()).thenReturn("Basic SW5mcmFQb3J0YWxDbGllbnQ6cGFzc3dvcmQxJA==");
 
         Answer<ClassicHttpResponse> answer = invocation -> {
             Object[] arguments = invocation.getArguments();

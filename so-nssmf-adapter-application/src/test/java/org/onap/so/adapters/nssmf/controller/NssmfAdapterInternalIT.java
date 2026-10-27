@@ -20,6 +20,7 @@
 package org.onap.so.adapters.nssmf.controller;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import lombok.RequiredArgsConstructor;
@@ -162,7 +163,8 @@ public class NssmfAdapterInternalIT {
         assertThat(response.getBody()).contains("jobId");
         assertThat(response.getBody()).contains("internal-job-id-001");
 
-        infraWireMock.verify(postRequestedFor(urlPathMatching(".*/3gppservices/.*/allocate")));
+        infraWireMock.verify(postRequestedFor(urlPathMatching(".*/3gppservices/.*/allocate"))
+                .withBasicAuth(new BasicCredentials("InfraPortalClient", "password1$")));
     }
 
     @Test

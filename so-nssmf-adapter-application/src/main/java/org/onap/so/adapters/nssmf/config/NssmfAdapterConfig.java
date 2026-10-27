@@ -21,6 +21,7 @@
 package org.onap.so.adapters.nssmf.config;
 
 import lombok.Getter;
+import org.onap.so.utils.BasicAuth;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,6 +32,13 @@ public class NssmfAdapterConfig {
     @Value("${mso.infra.endpoint}")
     private String infraEndpoint;
 
-    @Value("${mso.infra.auth}")
-    private String infraAuth;
+    @Value("${so.auth.username:#{null}}")
+    private String soUsername;
+
+    @Value("${so.auth.password:#{null}}")
+    private String soPassword;
+
+    public String getInfraAuth() {
+        return BasicAuth.header(soUsername, soPassword);
+    }
 }
