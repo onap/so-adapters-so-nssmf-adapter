@@ -20,7 +20,7 @@
 
 package org.onap.so.adapters.nssmf.interceptor;
 
-import org.apache.logging.log4j.ThreadContext;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,7 +37,7 @@ public class LoggerInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         String traceId = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
-        ThreadContext.put(TRACE_ID, traceId);
+        MDC.put(TRACE_ID, traceId);
         return true;
     }
 
@@ -50,6 +50,6 @@ public class LoggerInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
-        ThreadContext.remove(TRACE_ID);
+        MDC.remove(TRACE_ID);
     }
 }
